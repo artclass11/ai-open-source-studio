@@ -13,7 +13,7 @@ authors = [{name = "artclass11"}]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<9"]
+dev = ["pytest>=8,<10"]
 
 [project.scripts]
 prompt-firewall = "private_prompt_firewall:main"
