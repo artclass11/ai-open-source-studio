@@ -39,6 +39,11 @@ module_name = queued["id"].replace("-", "_")
     "    assert metadata['title']\n"
     "    assert metadata['summary']\n"
 )
+(project_dir / "conftest.py").write_text(
+    "from pathlib import Path\n"
+    "import sys\n\n"
+    "sys.path.insert(0, str(Path(__file__).resolve().parent))\n"
+)
 queued["status"] = "published"
 catalog_path.write_text(json.dumps(data, indent=2) + "\n")
 print(f"generated {queued['id']}")
