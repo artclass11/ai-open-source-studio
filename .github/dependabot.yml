@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /projects/week-01-private-prompt-firewall
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

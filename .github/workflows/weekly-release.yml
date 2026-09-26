@@ -1,0 +1,72 @@
+name: Weekly public release
+
+on:
+  schedule:
+    - cron: '30 13 * * 0' # 19:00 IST every Sunday
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  security-events: write
+
+concurrency:
+  group: weekly-public-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Generate, validate, and publish the next reviewed project
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Generate the next cataloged project
+        run: python tools/release_weekly.py
+
+      - name: Validate catalog and public-repo safety checks
+        run: |
+          python tools/validate_catalog.py
+          python tools/security_checks.py
+
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check 'pytest>=8,<9'
+
+      - name: Run every project test
+        run: python -m pytest -q
+
+      - name: Validate changed files
+        run: |
+          git diff --check
+          if git diff --name-only | grep -E '(^|/)(\.env|.*\.pem|.*\.key)$'; then
+            echo 'Sensitive-looking file detected; refusing to publish.'
+            exit 1
+          fi
+
+      - name: Publish the weekly project
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          PROJECT_ID=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('projects/catalog.json').read_text())
+          print(next(item['id'] for item in data['projects'] if item['status'] == 'published' and not Path('projects', item['id'], 'RELEASED').exists()))
+          PY
+          )
+          touch "projects/$PROJECT_ID/RELEASED"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add projects
+          git commit -m "release: publish ${PROJECT_ID}"
+          git push origin main
+          gh release create "${PROJECT_ID}" "projects/${PROJECT_ID}" --target main --title "${PROJECT_ID}" --generate-notes

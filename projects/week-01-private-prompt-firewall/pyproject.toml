@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "private-prompt-firewall"
+version = "0.1.0"
+description = "Local-first redaction for common prompt-sharing hazards"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "artclass11"}]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9"]
+
+[project.scripts]
+prompt-firewall = "private_prompt_firewall:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

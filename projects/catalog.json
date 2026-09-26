@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "projects": [
+    {
+      "id": "week-01-private-prompt-firewall",
+      "title": "Private Prompt Firewall",
+      "summary": "A local, dependency-light redaction utility for common secrets and personal identifiers.",
+      "release_tag": "week-01",
+      "status": "published"
+    },
+    {
+      "id": "week-02-ai-output-checklist",
+      "title": "AI Output Checklist",
+      "summary": "A local checklist runner that flags missing citations, uncertainty labels, and unsafe claims in generated text.",
+      "release_tag": "week-02",
+      "status": "queued"
+    },
+    {
+      "id": "week-03-prompt-diff",
+      "title": "Prompt Diff",
+      "summary": "A deterministic command-line tool for reviewing prompt changes and detecting accidental instruction drift.",
+      "release_tag": "week-03",
+      "status": "queued"
+    },
+    {
+      "id": "week-04-model-card-starter",
+      "title": "Model Card Starter",
+      "summary": "A generator for transparent model-card documentation with limitations, evaluation, and data provenance sections.",
+      "release_tag": "week-04",
+      "status": "queued"
+    }
+  ]
+}

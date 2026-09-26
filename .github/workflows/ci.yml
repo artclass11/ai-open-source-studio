@@ -1,0 +1,33 @@
+name: Quality and security checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
+        with:
+          python-version: '3.12'
+      - run: python tools/validate_catalog.py
+      - run: python tools/security_checks.py
+      - run: python -m pip install --disable-pip-version-check 'pytest>=8,<9'
+      - run: python -m pytest -q
+      - run: git diff --check
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: python
+      - uses: github/codeql-action/analyze@v3
