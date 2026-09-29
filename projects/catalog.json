@@ -28,6 +28,13 @@
       "summary": "A generator for transparent model-card documentation with limitations, evaluation, and data provenance sections.",
       "release_tag": "week-04",
       "status": "queued"
+    },
+    {
+      "id": "week-05-qwen-repolens",
+      "title": "RepoLens — Local AI Repository Auditor",
+      "summary": "A local repository and screenshot auditor powered by Qwen3.5-4B, producing architecture, risks, and actionable engineering next steps.",
+      "release_tag": "week-05",
+      "status": "published"
     }
   ]
 }
